@@ -1,21 +1,27 @@
-import Emailer from './emailer.js';
-import Telegrammer from './telegrammer.js';
-import counter from './counter.js';
-import { Message, TelegrammMessage } from './message.js'
+import Emailer from './Emailer.js';
+import Telegrammer from './Telegrammer.js';
+import limitMessages from './limit-messanges.js';
+import { Message, TelegrammMessage } from './Message.js'
 
-const emailer = new Emailer( counter );
-const telegrammer = new Telegrammer( counter );
+const emailer = new Emailer( limitMessages );
+const telegrammer = new Telegrammer( limitMessages );
 
 telegrammer.sendMessages(
   new TelegrammMessage(
     'title for tel message',
     'discription for tel message',
-    'image'
+    'some image'
   )
-)
+);
 
 emailer.sendMessages(
-  new Message('title message', 'description message'),
-  new Message('title message 2', 'description message 2'),
-  new Message('title message 3', 'description message 3')
+  new Message('message', 'desc'),
+  new Message('title message', 'desc Sales'),
+  new Message('title message 2', 'description message 2 sAles'),
+  new Message('title message 3 tWitter', 'description message 3')
 );
+
+
+emailer.getLatestMessages('spamMessages');
+emailer.getLatestMessages('socialMessages');
+emailer.getLatestMessages('messages');
