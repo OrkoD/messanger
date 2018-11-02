@@ -5,10 +5,10 @@ export default class Transporter {
   }
 
   sendMessages( ...messages ) {
-    if ( messages.length === 0 ) return console.error(`You can't send empty message!`);
-    if ( messages.length > this.limitMessages.counter ) return console.error(`Sorry, you can't send messages! :(`);
+    if ( this.messageIsEmpty( messages ) ) return console.error(`You can't send empty message!`);
+    if ( this.overLimit( messages ) ) return console.error(`Sorry, you can't send messages! The limit is over :(`);
     for ( let msg of messages ) {
-      if (!this.validateMessage( msg )) {
+      if ( !this.validateMessage( msg ) ) {
         console.error('Message is invalide. Please, fill all requires fields!');
       } else {
         console.log( msg );
@@ -16,6 +16,14 @@ export default class Transporter {
         this.limitMessages.decreaseCount();
       }
     }
+  }
+
+  messageIsEmpty( messages ) {
+    return messages.length === 0;
+  }
+
+  overLimit( messages ) {
+    return messages.length > this.limitMessages.counter;
   }
   
   validateMessage( message ) {

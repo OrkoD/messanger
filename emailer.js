@@ -10,12 +10,16 @@ export default class Emailer extends Transporter {
   saveMessage( message ) {
     for ( let k in message ) {
       if (this.containsWords( message[k], Transporter.spamWords )) {
-        return this.spamMessages = [ ...this.spamMessages, message ];
+        return this.pushToArray( 'spamMessages', message );
       } else if (this.containsWords( message[k], Transporter.socialWords )) {
-        return this.socialMessages = [ ...this.socialMessages, message ];
+        return this.pushToArray( 'socialMessages', message );
       }
     }
-    return this.messages = [ ...this.messages, message ];
+    return this.pushToArray( 'messages', message );
+  }
+
+  pushToArray( array, message ) {
+    return this[array] = [ ...this[array], message ];
   }
 
   containsWords( value, searchWords ) {
