@@ -1,36 +1,35 @@
-export default class Emailer {
-  constructor( counter ) {
-    this.counter = counter
-    this.messages = [];
-  }
+import Transporter from './Transporter.js';
 
-  sendMessages(...messages) {
-    if ( messages.length < this.counter.counter ) {
-      for ( let m of messages ) {
-        if ( !m.title || !m.description ) {
-          console.log('Title and description are required!');
-        } else {
-          console.log( m );
-          this.saveMessage( m );
-          this.counter.decreaseCount();
-        }
-      }
-    } else {
-      console.log(`Sorry, you can't send messages! :(`);
-    }
+export default class Emailer extends Transporter {
+  constructor( limitMessages ) {
+    super( limitMessages );
+    this.spamMessages = [];
+    this.socialMessages = [];
   }
 
   saveMessage( message ) {
-    this.messages = [ ...this.messages, message ];
+    for ( let k in message ) {
+      if (this.containsWords( message[k], Transporter.spamWords )) {
+        return this.spamMessages = [ ...this.spamMessages, message ];
+      } else if (this.containsWords( message[k], Transporter.socialWords )) {
+        return this.socialMessages = [ ...this.socialMessages, message ];
+      }
+    }
+    return this.messages = [ ...this.messages, message ];
   }
 
-  getLatestMessages() {
-    return this.messages.length <= 5 ? this.messages : this.messages.slice( this.messages.length - 5 );
+  containsWords( value, searchWords ) {
+    return value.match(searchWords);
   }
 
-  get count() {
-    return this.counter.counter;
+  getLatestMessages( messages, number ) {
+    messages === 'spamMessages' ? console.log('Spam:') :
+    messages === 'socialMessages' ? console.log('Social:') :
+    console.log('Messages:');
+    this.returnMessages( this[messages], number );
   }
 
-  set count( count ) {}
+  returnMessages( messages, number ) {
+    console.table(messages.length <= number ? messages : messages.slice( messages.length - number ))
+  }
 }

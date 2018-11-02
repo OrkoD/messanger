@@ -1,12 +1,12 @@
-import Emailer from './emailer.js';
+import Transporter from './Transporter.js';
 
-export default class Telegrammer extends Emailer {
-  constructor( counter ) {
-    super( counter );
+export default class Telegrammer extends Transporter {
+  constructor( limitMessages ) {
+    super( limitMessages );
   }
-  sendMessages( ...messages ) {
-    if ( [ ...messages ].length !== [ ...messages ].filter(m => m.image).length )
-      return console.log('image are required!');
-    super.sendMessages( ...messages );
+
+  validateMessage( message ) {
+    if ( !message.title || !message.description || !message.image ) return false;
+    return true;
   }
 }
